@@ -36,7 +36,8 @@ char *scolor(FILE *out, const char *color, const char *text) {
 
 char *printr(char c, size_t n) {
 	char *result = malloc((n + 1) * sizeof(char));
-	for(size_t i = 0; i < n; ++i) {
+	size_t i;
+	for(i = 0; i < n; ++i) {
 		result[i] = c;
 	}
 	result[n] = 0;
