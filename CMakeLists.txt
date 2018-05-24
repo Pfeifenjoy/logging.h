@@ -7,6 +7,9 @@ target_include_directories(logging PUBLIC
 	$<INSTALL_INTERFACE:include>
 )
 
+add_executable(example example/main.c)
+target_link_libraries(example logging)
+
 install(TARGETS logging EXPORT LoggingTargets
 	ARCHIVE DESTINATION lib
 	LIBRARY DESTINATION lib
