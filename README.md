@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/Pfeifenjoy/logging.h.svg?branch=master)](https://travis-ci.org/Pfeifenjoy/logging.h)
+
 # Logging.h
 
 A small library which implements logging.
