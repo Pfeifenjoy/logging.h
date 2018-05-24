@@ -13,3 +13,5 @@ int main(const int argc, const char **argv) {
 	warn("42");     // -> [WARN]  42
 }
 ```
+
+![](https://github.com/Pfeifenjoy/logging.h/blob/master/images/example.gif)
