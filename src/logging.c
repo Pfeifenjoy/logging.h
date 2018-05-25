@@ -35,11 +35,8 @@ char *scolor(FILE *out, const char *color, const char *text) {
 }
 
 char *printr(char c, size_t n) {
-	char *result = malloc((n + 1) * sizeof(char));
-	size_t i;
-	for(i = 0; i < n; ++i) {
-		result[i] = c;
-	}
+	char *result = (char *) malloc((n + 1) * sizeof(char));
+	memset(result, c, n);
 	result[n] = 0;
 	return result;
 }
