@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/Pfeifenjoy/logging.h.svg?branch=master)](https://travis-ci.org/Pfeifenjoy/logging.h)
+[![Build Status](https://travis-ci.org/Pfeifenjoy/trie.h.svg?branch=master)](https://travis-ci.org/Pfeifenjoy/trie.h)
 
 # Logging.h
 
