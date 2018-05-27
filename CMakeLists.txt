@@ -19,7 +19,7 @@ install(TARGETS logging.h EXPORT Targets
 install(DIRECTORY include/logging DESTINATION include)
 install(EXPORT Targets
 	FILE Targets.cmake
-	NAMESPACE Logging.h::
+	NAMESPACE logging.h::
 	DESTINATION lib/cmake/logging.h
 )
 
