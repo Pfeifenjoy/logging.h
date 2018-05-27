@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.5)
-project(logging VERSION 0.0.1 LANGUAGES C)
+project(logging.h VERSION 0.0.1 LANGUAGES C)
 
 add_library(logging src/logging.c)
 target_include_directories(logging PUBLIC
@@ -10,26 +10,26 @@ target_include_directories(logging PUBLIC
 add_executable(example example/main.c)
 target_link_libraries(example logging)
 
-install(TARGETS logging EXPORT LoggingTargets
+install(TARGETS logging EXPORT Logging.hTargets
 	ARCHIVE DESTINATION lib
 	LIBRARY DESTINATION lib
 	RUNTIME DESTINATION bin
 	INCLUDES DESTINATION include
 )
 install(DIRECTORY include/logging DESTINATION include)
-install(EXPORT LoggingTargets
-	FILE LoggingTargets.cmake
-	NAMESPACE Logging::
-	DESTINATION lib/cmake/logging
+install(EXPORT Logging.hTargets
+	FILE Logging.hTargets.cmake
+	NAMESPACE Logging.h::
+	DESTINATION lib/cmake/logging.h
 )
 
 include(CMakePackageConfigHelpers)
-write_basic_package_version_file(LoggingConfigVersion.cmake
+write_basic_package_version_file(Logging.hConfigVersion.cmake
 	COMPATIBILITY SameMajorVersion
 )
 
-install(FILES build/LoggingConfigVersion.cmake
-	DESTINATION lib/cmake/logging
+install(FILES build/Logging.hConfigVersion.cmake
+	DESTINATION lib/cmake/logging.h
 )
 
 #CPack
