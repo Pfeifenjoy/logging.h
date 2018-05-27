@@ -16,6 +16,7 @@ install(TARGETS Logging EXPORT LoggingTargets
 	RUNTIME DESTINATION bin
 	INCLUDES DESTINATION include
 )
+install(DIRECTORY include/logging DESTINATION include)
 install(EXPORT LoggingTargets
 	FILE LoggingTargets.cmake
 	NAMESPACE Logging::
