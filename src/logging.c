@@ -1,6 +1,6 @@
 #include "logging/logging.h"
+
 #include "stdio.h"
-#include "stdlib.h"
 #include "unistd.h"
 #include "string.h"
 #include "assert.h"
@@ -11,123 +11,132 @@
 #define BLUE    "\x1b[34m"
 #define RESET   "\x1b[0m"
 
-#define MAX_LABEL_WIDTH 5
-
-debug_level current_debug_level = 0;
-
-char *scolor(FILE *out, const char *color, const char *text) {
-	char *result;
-	size_t length;
-
+void fprint_color(FILE *out, const char *color, const char *text) {
 	//check if the programs output is a file
 	if(isatty(fileno(out))) {
-		length = strlen(color) + strlen(text) + strlen(RESET);
-		result = malloc((length + 1) * sizeof(char));
-		snprintf(result, length + 1, "%s%s%s", color, text, RESET);
+		fprintf(out, "%s%s%s", color, text, RESET);
 	} else {
-		length = strlen(text);
-		result = malloc((length + 1) * sizeof(char));
-		strcpy(result, text);
+		fprintf(out, "%s", text);
 	}
-
-	result[length] = 0;
-	return result;
 }
 
-char *printr(char c, size_t n) {
-	char *result = (char *) malloc((n + 1) * sizeof(char));
-	memset(result, c, n);
-	result[n] = 0;
-	return result;
+void fprint_tag(FILE *out, const char *color, const char *text) {
+	short text_length = strlen(text);
+	assert(text_length <= 6 && "Tag name too long.");
+	short blank_length = 6 - text_length; 
+
+	fprintf(out, "[");
+	fprint_color(out, color, text);
+	fprintf(out, "]%*s", blank_length, " ");
 }
 
-char *make_label(FILE *out, const char *color, const char *name) {
-	assert(strlen(name) <= MAX_LABEL_WIDTH);
-
-	char *colored_name = scolor(out, color, name);
-	char *space =  printr(' ', MAX_LABEL_WIDTH - strlen(name));
-
-	size_t length = strlen(colored_name) + strlen("[") + strlen("] ") + strlen(space);
-	char *result = (char *) malloc((length + 1) * sizeof(char));
-	snprintf(result, length + 1, "[%s]%s ", colored_name, space);
-	result[length] = 0;
-
-	free(colored_name);
-	free(space);
-
-	return result;
+void vfprint_info(FILE * out, const char *text, va_list args) {
+	fprint_tag(out, BLUE, "INFO");
+	vfprintf(out, text, args);
 }
 
-void vlog(
-		FILE *out,
-		const char *label_text,
-		const char *color,
-		const char *text,
-		va_list args
-	) {
-
-	//label
-	char *label = make_label(out, color, label_text);
-
-	//create format
-	size_t format_length = strlen(label) + strlen(text) + strlen("\n");
-	char *format = (char *) malloc((format_length + 1) * sizeof(char));
-	snprintf(format, format_length + 1, "%s%s\n", label, text);
-	format[format_length] = 0;
-
-	//print
-	vfprintf(out, format, args);
-
-	free(label);
-	free(format);
-}
-
-void vinfo(const char *text, va_list args) {
-	vlog(stdout, "INFO", BLUE, text, args);
-}
-void info(const char *text, ...) {
+void fprint_info(FILE * out, const char *text, ...) {
 	va_list args;
 	va_start(args, text);
-	vinfo(text, args);
+	vfprint_info(out, text, args);
 	va_end(args);
 }
 
-void vwarn(const char *text, va_list args) {
-	vlog(stderr, "WARN", YELLOW, text, args);
-}
-
-void warn(const char *text, ...) {
+void print_info(const char *text, ...) {
 	va_list args;
 	va_start(args, text);
-	vwarn(text, args);
+	vfprint_info(stdout, text, args);
 	va_end(args);
 }
 
-void verror(const char *formatting, va_list args) {
-	vlog(stderr, "ERROR", RED, formatting, args);
-}
-
-void error(const char *text, ...) {
+void println_info(const char *text, ...) {
 	va_list args;
 	va_start(args, text);
-	verror(text, args);
+	vfprint_info(stdout, text, args);
+	va_end(args);
+	printf("\n");
+}
+
+void vfprint_debug(FILE * out, const char *text, va_list args) {
+#ifndef NDEBUG
+	fprint_tag(out, GREEN, "DEBUG");
+	vfprintf(out, text, args);
+#endif
+}
+
+void fprint_debug(FILE * out, const char *text, ...) {
+	va_list args;
+	va_start(args, text);
+	vfprint_debug(out, text, args);
 	va_end(args);
 }
 
-void vdebug(const debug_level level, const char *text, va_list args) {
-    if(level <= current_debug_level) {
-		vlog(stdout, "DEBUG", GREEN, text, args);
-	}
-
+void print_debug(const char *text, ...) {
+	va_list args;
+	va_start(args, text);
+	vfprint_debug(stdout, text, args);
+	va_end(args);
 }
 
-void debug(const debug_level level, const char *text, ...) {
-    va_list args;
-    va_start(args, text);
-	vdebug(level, text, args);
-    va_end(args);
+void println_debug(const char *text, ...) {
+	va_list args;
+	va_start(args, text);
+	vfprint_debug(stdout, text, args);
+	va_end(args);
+#ifndef NDEBUG
+	printf("\n");
+#endif
 }
 
-void set_debug_level(debug_level level) {
-    current_debug_level = level;
+void vfprint_warn(FILE *out, const char *text, va_list args) {
+	fprint_tag(out, YELLOW, "WARN");
+	vfprintf(out, text, args);
+}
+
+void fprint_warn(FILE *out, const char *text, ...) {
+	va_list args;
+	va_start(args, text);
+	vfprint_warn(out, text, args);
+	va_end(args);
+}
+
+void print_warn(const char *text, ...) {
+	va_list args;
+	va_start(args, text);
+	vfprint_warn(stderr, text, args);
+	va_end(args);
+}
+
+void println_warn(const char *text, ...) {
+	va_list args;
+	va_start(args, text);
+	vfprint_warn(stderr, text, args);
+	va_end(args);
+	printf("\n");
+}
+void vfprint_error(FILE *out, const char *text, va_list args) {
+	fprint_tag(out, RED, "ERROR");
+	vfprintf(out, text, args);
+}
+
+void fprint_error(FILE *out, const char *text, ...) {
+	va_list args;
+	va_start(args, text);
+	vfprint_error(out, text, args);
+	va_end(args);
+}
+
+void print_error(const char *text, ...) {
+	va_list args;
+	va_start(args, text);
+	vfprint_error(stderr, text, args);
+	va_end(args);
+}
+
+void println_error(const char *text, ...) {
+	va_list args;
+	va_start(args, text);
+	vfprint_error(stderr, text, args);
+	va_end(args);
+	printf("\n");
 }

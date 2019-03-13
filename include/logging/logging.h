@@ -1,22 +1,27 @@
-#ifndef LOGGING_H_LSUOR4FY
-#define LOGGING_H_LSUOR4FY
+#ifndef LOGGING_H_SIGO0LBD
+#define LOGGING_H_SIGO0LBD
 
+#include "stdio.h"
 #include "stdarg.h"
 
-typedef unsigned char debug_level;
+void vfprint_debug(FILE *, const char *, va_list);
+void fprint_debug(FILE *, const char *, ...);
+void print_debug(const char *, ...);
+void println_debug(const char *, ...);
 
-void vinfo(const char *, va_list);
-void info(const char *, ...);
+void vfprint_info(FILE *, const char *, va_list);
+void fprint_info(FILE *, const char *, ...);
+void print_info(const char *, ...);
+void println_info(const char *, ...);
 
-void vwarn(const char *, va_list);
-void warn(const char *, ...);
+void vfprint_warn(FILE *, const char *, va_list);
+void fprint_warn(FILE *, const char *, ...);
+void print_warn(const char *, ...);
+void println_warn(const char *, ...);
 
-void verror(const char *, va_list);
-void error(const char *, ...);
+void vfprint_error(FILE *, const char *, va_list);
+void fprint_error(FILE *, const char *, ...);
+void print_error(const char *, ...);
+void println_error(const char *, ...);
 
-void vdebug(const debug_level, const char *, va_list);
-void debug(const debug_level, const char *, ...);
-
-void set_debug_level(debug_level);
-
-#endif /* end of include guard: LOGGING_H_LSUOR4FY */
+#endif /* end of include guard: LOGGING_H_SIGO0LBD */
