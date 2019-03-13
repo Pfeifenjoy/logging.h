@@ -1,5 +1,36 @@
 cmake_minimum_required(VERSION 3.5)
-project(Logging VERSION 0.0.1 LANGUAGES C)
+
+# Get the current working branch
+execute_process(
+  COMMAND git rev-parse --abbrev-ref HEAD
+  WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+  OUTPUT_VARIABLE GIT_BRANCH
+  OUTPUT_STRIP_TRAILING_WHITESPACE
+)
+
+# Get the latest abbreviated commit hash of the working branch
+execute_process(
+  COMMAND git log -1 --format=%h
+  WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+  OUTPUT_VARIABLE GIT_COMMIT_HASH
+  OUTPUT_STRIP_TRAILING_WHITESPACE
+)
+
+execute_process(
+  COMMAND git describe --abbrev=0 --tags
+  WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+  OUTPUT_VARIABLE GIT_VERSION
+  OUTPUT_STRIP_TRAILING_WHITESPACE
+  ERROR_QUIET
+)
+
+if(GIT_VERSION MATCHES "[0-9]+.[0-9]+.[0-9]+")
+	message(STATUS "Using git version ${GIT_VERSION}")
+	project(Logging VERSION "${GIT_VERSION}" LANGUAGES C)
+else()
+	project(Logging VERSION "0.0.0" LANGUAGES C)
+endif()
+
 
 add_library(Logging src/logging.c)
 target_include_directories(Logging PUBLIC
@@ -29,7 +60,13 @@ write_basic_package_version_file("LoggingConfigVersion.cmake"
 	COMPATIBILITY SameMajorVersion
 )
 
-install(FILES "LoggingConfig.cmake" "${CMAKE_CURRENT_BINARY_DIR}/LoggingConfigVersion.cmake" DESTINATION lib/cmake/Logging)
+install(
+	FILES
+		"cmake/LoggingConfig.cmake"
+		"${CMAKE_CURRENT_BINARY_DIR}/LoggingConfigVersion.cmake"
+	DESTINATION
+		lib/cmake/Logging
+)
 
 
 #CPack
