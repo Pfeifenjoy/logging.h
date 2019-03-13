@@ -1,37 +1,10 @@
 cmake_minimum_required(VERSION 3.5)
+project(logging.h LANGUAGES C)
 
-# Get the current working branch
-execute_process(
-  COMMAND git rev-parse --abbrev-ref HEAD
-  WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-  OUTPUT_VARIABLE GIT_BRANCH
-  OUTPUT_STRIP_TRAILING_WHITESPACE
-)
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${PROJECT_SOURCE_DIR}/cmake)
+include(Git)
 
-# Get the latest abbreviated commit hash of the working branch
-execute_process(
-  COMMAND git log -1 --format=%h
-  WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-  OUTPUT_VARIABLE GIT_COMMIT_HASH
-  OUTPUT_STRIP_TRAILING_WHITESPACE
-)
-
-execute_process(
-  COMMAND git describe --abbrev=0 --tags
-  WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-  OUTPUT_VARIABLE GIT_VERSION
-  OUTPUT_STRIP_TRAILING_WHITESPACE
-  ERROR_QUIET
-)
-
-if(GIT_VERSION MATCHES "[0-9]+.[0-9]+.[0-9]+")
-	message(STATUS "Using git version ${GIT_VERSION}")
-	project(Logging VERSION "${GIT_VERSION}" LANGUAGES C)
-else()
-	project(Logging VERSION "0.0.0" LANGUAGES C)
-endif()
-
-
+#Targets
 add_library(Logging src/logging.c)
 target_include_directories(Logging PUBLIC
 	$<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/include>
@@ -41,6 +14,7 @@ target_include_directories(Logging PUBLIC
 add_executable(example example/main.c)
 target_link_libraries(example Logging)
 
+#Install
 install(TARGETS Logging EXPORT LoggingTargets
 	ARCHIVE DESTINATION lib
 	LIBRARY DESTINATION lib
@@ -48,6 +22,8 @@ install(TARGETS Logging EXPORT LoggingTargets
 	INCLUDES DESTINATION include
 )
 install(DIRECTORY include/logging DESTINATION include)
+install(FILES LICENSE.txt DESTINATION .)
+
 install(EXPORT LoggingTargets
 	FILE LoggingTargets.cmake
 	NAMESPACE Logging::
@@ -68,9 +44,22 @@ install(
 		lib/cmake/Logging
 )
 
-
 #CPack
+set(CPACK_BUNDLE_NAME "logging.h")
 set(CPACK_PACKAGE_CONTACT "arwed.mett@googlemail.com")
+set(CPACK_PACKAGE_HOMEPAGE_URL "https://gitea.metthub.de/Pfeifenjoy/argparse")
+set(CPACK_PACKAGE_CHECKSUM "SHA512")
+set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_LIST_DIR}/LICENSE.txt")
+
+if(GIT_CURRENT_VERSION MATCHES "[0-9]+.[0-9]+.[0-9]+")
+	set(CPACK_PACKAGE_FILE_NAME
+		"logging.h-${CMAKE_SYSTEM_NAME}-${GIT_CURRENT_VERSION}")
+else()
+	set(CPACK_PACKAGE_FILE_NAME
+		"logging.h-${CMAKE_SYSTEM_NAME}-${GIT_BRANCH}-${GIT_COMMIT_HASH}")
+endif()
+
+message(STATUS "Package name: ${CPACK_PACKAGE_FILE_NAME}")
 
 if(APPLE)
 	set(CPACK_GENERATOR "TGZ;ZIP;productbuild")
@@ -82,5 +71,4 @@ else()
 	set(CPACK_GENERATOR "TGZ;ZIP")
 endif()
 
-set(CPACK_BUNDLE_NAME ${PROJECT_NAME})
 include(CPack)
