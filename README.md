@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/Pfeifenjoy/logging.h.svg?branch=master)](https://travis-ci.org/Pfeifenjoy/logging.h)
+[![Build Status](https://drone.metthub.de/api/badges/Pfeifenjoy/logging.h/status.svg)](https://drone.metthub.de/Pfeifenjoy/logging.h)
 
 # Logging.h
 
