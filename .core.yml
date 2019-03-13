@@ -22,7 +22,7 @@ steps:
 - name: memcheck
   image: pfeifenjoy/logging.h
   commands:
-  - valgrind --leak-check=yes --error-exitcode=1 --suppressions=./.valgrind-suppressions ./build/example
+  - valgrind --leak-check=yes --error-exitcode=1 ./build/example
 
 - name: package
   image: pfeifenjoy/logging.h
