@@ -22,7 +22,6 @@ install(TARGETS Logging EXPORT LoggingTargets
 	INCLUDES DESTINATION include
 )
 install(DIRECTORY include/logging DESTINATION include)
-install(FILES LICENSE.txt DESTINATION .)
 
 install(EXPORT LoggingTargets
 	FILE LoggingTargets.cmake
