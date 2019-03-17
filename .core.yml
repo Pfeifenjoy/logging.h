@@ -4,42 +4,42 @@ name: default
 steps:
 
 - name: build
-    image: pfeifenjoy/logging.h
-    commands:
-        - cmake -DCMAKE_BUILD_TYPE=Debug -H. -Bbuild
-        - cmake --build build
+  image: pfeifenjoy/logging.h
+  commands:
+    - cmake -DCMAKE_BUILD_TYPE=Debug -H. -Bbuild
+    - cmake --build build
 
 - name: test
-    image: pfeifenjoy/logging.h
-    commands:
-        - ctest --verbose build
+  image: pfeifenjoy/logging.h
+  commands:
+    - ctest --verbose build
 
 - name: memcheck
-    image: pfeifenjoy/logging.h
-    commands:
-        - valgrind --leak-check=yes --error-exitcode=1 ./build/example
+  image: pfeifenjoy/logging.h
+  commands:
+    - valgrind --leak-check=yes --error-exitcode=1 ./build/example
 
 - name: linux
-    image: pfeifenjoy/logging.h
-    commands:
-        - rm -rf build
-        - cmake -DCMAKE_BUILD_TYPE=Release -H. -Bbuild
-        - cmake --build build --target package
+  image: pfeifenjoy/logging.h
+  commands:
+    - rm -rf build
+    - cmake -DCMAKE_BUILD_TYPE=Release -H. -Bbuild
+    - cmake --build build --target package
 
 - name: gitea_release
-    image: plugins/gitea-release
-    settings:
-        api_key:
-            from_secret: gitea_token
-        base_url: https://gitea.metthub.de
-        files:
-            - build/logging.h-*
-    checksum:
-        - md5
-        - sha1
-        - sha256
-        - sha512
-        - adler32
-        - crc32
-    when:
-        event: tag
+  image: plugins/gitea-release
+  settings:
+    api_key:
+      from_secret: gitea_token
+    base_url: https://gitea.metthub.de
+    files:
+      - build/logging.h-*
+  checksum:
+    - md5
+    - sha1
+    - sha256
+    - sha512
+    - adler32
+    - crc32
+  when:
+    event: tag

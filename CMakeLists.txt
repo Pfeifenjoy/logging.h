@@ -3,7 +3,7 @@ project(logging.h LANGUAGES C)
 message(STATUS ${CMAKE_SYSTEM_NAME})
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${PROJECT_SOURCE_DIR}/cmake)
-include(git)
+include(require-git)
 
 #Targets
 add_library(Logging src/logging.c)
