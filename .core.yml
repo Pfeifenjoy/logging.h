@@ -6,18 +6,13 @@ steps:
 - name: build
     image: pfeifenjoy/logging.h
     commands:
-        - mkdir build
-        - cd build
-        - cmake ..
-        - cmake --build .
-        - cd ..
+        - cmake -DCMAKE_BUILD_TYPE=Debug -H. -Bbuild
+        - cmake --build build
 
 - name: test
     image: pfeifenjoy/logging.h
     commands:
-        - cd build
-        - ctest --verbose .
-        - cd ..
+        - ctest --verbose build
 
 - name: memcheck
     image: pfeifenjoy/logging.h
@@ -27,8 +22,9 @@ steps:
 - name: linux
     image: pfeifenjoy/logging.h
     commands:
-        - cmake --config Release -H. -Bbuild/linux64
-        - cmake --build build/linux64 --target package
+        - rm -rf build
+        - cmake -DCMAKE_BUILD_TYPE=Release -H. -Bbuild
+        - cmake --build build --target package
 
 - name: gitea_release
     image: plugins/gitea-release
@@ -37,7 +33,7 @@ steps:
             from_secret: gitea_token
         base_url: https://gitea.metthub.de
         files:
-            - build/linux64/logging.h-*
+            - build/logging.h-*
     checksum:
         - md5
         - sha1

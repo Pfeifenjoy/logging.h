@@ -12,7 +12,7 @@ target_include_directories(Logging PUBLIC
 	$<INSTALL_INTERFACE:include>
 )
 
-if(CMAKE_BUILD_TYPE MATCHES Debug)
+if(${CMAKE_BUILD_TYPE} MATCHES "Debug")
 	add_executable(example example/main.c)
 	target_link_libraries(example Logging)
 endif()
