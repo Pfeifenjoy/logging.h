@@ -27,7 +27,7 @@ The package can be installed via source with the following commands.
 git clone https://gitea.metthub.de/Pfeifenjoy/logging.h.git
 cd logging.h
 mkdir build && cd build
-cmake --config Release ..
+cmake -DCMAKE_BUILD_TYPE=Release ..
 cmake --build . --target install
 ```
 
