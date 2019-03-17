@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 3.5)
 project(logging.h LANGUAGES C)
+message(STATUS ${CMAKE_SYSTEM_NAME})
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${PROJECT_SOURCE_DIR}/cmake)
 include(git)
@@ -11,8 +12,10 @@ target_include_directories(Logging PUBLIC
 	$<INSTALL_INTERFACE:include>
 )
 
-add_executable(example example/main.c)
-target_link_libraries(example Logging)
+if(CMAKE_BUILD_TYPE MATCHES Debug)
+	add_executable(example example/main.c)
+	target_link_libraries(example Logging)
+endif()
 
 #Install
 install(TARGETS Logging EXPORT LoggingTargets
