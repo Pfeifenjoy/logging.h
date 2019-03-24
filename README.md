@@ -36,6 +36,6 @@ cmake --build . --target install
 You can use logging.h with cmake as follows. Thereby replace `<target>` with your target.
 
 ```cmake
-find_package(Logging REQUIRED)
-target_link_libraries(<target> PRIVATE Logging::static)
+find_package(logging 0.0.2 EXACT REQUIRED)
+target_link_libraries(<target> PRIVATE logging::logging-static)
 ```
