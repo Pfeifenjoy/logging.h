@@ -37,5 +37,5 @@ You can use logging.h with cmake as follows. Thereby replace `<target>` with you
 
 ```cmake
 find_package(Logging REQUIRED)
-target_link_libraries(<target> PRIVATE Logging::Logging)
+target_link_libraries(<target> PRIVATE Logging::static)
 ```
