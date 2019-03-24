@@ -6,19 +6,30 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${PROJECT_SOURCE_DIR}/cmake)
 include(require-git)
 
 #Targets
-add_library(Logging src/logging.c)
+add_library(Logging OBJECT src/logging.c)
 target_include_directories(Logging PUBLIC
+	$<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/include>
+	$<INSTALL_INTERFACE:include>
+)
+set_property(TARGET Logging PROPERTY POSITION_INDEPENDENT_CODE 1)
+add_library(shared SHARED $<TARGET_OBJECTS:Logging>)
+target_include_directories(shared PUBLIC
+	$<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/include>
+	$<INSTALL_INTERFACE:include>
+)
+add_library(static STATIC $<TARGET_OBJECTS:Logging>)
+target_include_directories(static PUBLIC
 	$<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/include>
 	$<INSTALL_INTERFACE:include>
 )
 
 if(${CMAKE_BUILD_TYPE} MATCHES "Debug")
 	add_executable(example example/main.c)
-	target_link_libraries(example Logging)
+	target_link_libraries(example shared)
 endif()
 
 #Install
-install(TARGETS Logging EXPORT LoggingTargets
+install(TARGETS static shared EXPORT LoggingTargets
 	ARCHIVE DESTINATION lib
 	LIBRARY DESTINATION lib
 	RUNTIME DESTINATION bin
