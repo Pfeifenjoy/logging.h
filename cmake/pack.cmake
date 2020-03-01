@@ -1,6 +1,6 @@
 set(CPACK_BUNDLE_NAME "logging.h")
 set(CPACK_PACKAGE_CONTACT "arwed.mett@googlemail.com")
-set(CPACK_PACKAGE_HOMEPAGE_URL "https://gitea.metthub.de/Pfeifenjoy/argparse")
+set(CPACK_PACKAGE_HOMEPAGE_URL "https://gitea.metthub.de/Pfeifenjoy/logging.h")
 set(CPACK_PACKAGE_CHECKSUM "SHA512")
 set(CPACK_RESOURCE_FILE_LICENSE "${PROJECT_SOURCE_DIR}/LICENSE.txt")
 
